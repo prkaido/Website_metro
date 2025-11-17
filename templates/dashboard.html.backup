@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Servicio de Metrología — Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for(\'static\', filename=\'css/style.css\') }}" />
+</head>
+<body>
+  <a href="#mainContent" class="skip-link">Saltar al contenido</a>
+  <header>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <button id="hamburgerBtn" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false" class="hamburger" type="button">☰</button>
+      <img src="{{ url_for(\'static\', filename=\'logo.svg\') }}" alt="logo" class="logo" width="36" height="36" />
+      <h1>Servicio de Metrología — Gestor de Calibraciones</h1>
+    </div>
+    <div class="alerts" id="topAlerts" aria-live="polite"></div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar" aria-hidden="true" role="navigation" aria-label="Menú principal">
+    <div class="sidebar-inner card">
+      <div class="sidebar-top" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+        <img src="{{ url_for(\'static\', filename=\'logo.svg\') }}" alt="logo" class="logo small" width="28" height="28" />
+        <strong>Metrología</strong>
+      </div>
+      <nav>
+        <ul style="list-style:none;padding:0;margin:0">
+          <li><a class="side-link" href="dashboard.html" role="menuitem" tabindex="0">Dashboard</a></li>
+          <li><a class="side-link" href="dashboard.html#equipTable" role="menuitem" tabindex="0">Equipos</a></li>
+          <li><a class="side-link" href="add.html" data-action="add" role="menuitem" tabindex="0">Agregar equipo</a></li>
+          <li><button id="sideExport" class="side-link" role="menuitem" tabindex="0">Exportar CSV</button></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="container" id="mainContent">
+    <section id="dashboardView">
+      <div class="grid">
+        <div>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <h2 style="margin:0">Equipos</h2>
+                <p class="muted" id="subtitle">Lista de equipos registrados</p>
+              </div>
+              <div class="row">
+                <input id="search" placeholder="Buscar por nombre o serial..." style="width:220px;padding:0.5rem;border-radius:8px;border:1px solid #e6e9ef" />
+                <button id="logoutBtn" class="ghost">Cerrar sesión</button>
+              </div>
+            </div>
+
+            <div class="space"></div>
+            <!-- export/import controls removed from here and placed into the right sidebar for separation -->
+
+            <div class="space"></div>
+            <div style="overflow:auto">
+              <table id="equipTable">
+                <thead>
+                  <tr>
+                    <th>Equipo</th>
+                    <th>Serial</th>
+                    <th>Centro de costo</th>
+                    <th>Ubicación</th>
+                    <th>Periodicidad (d)</th>
+                    <th>Última calibración</th>
+                    <th>Próx. calibración</th>
+                    <th>Certificado</th>
+                    <th>Días restantes</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="space"></div>
+          <div id="addCard" class="card" style="display:none">
+            <h3>Agregar / editar equipo</h3>
+            <div class="space"></div>
+            <div class="form-row">
+              <label for="eqName">Nombre del equipo</label>
+              <input id="eqName" placeholder="ej. Multímetro Fluke 187" />
+            </div>
+            <div class="form-row">
+              <label for="eqSerial">Serial</label>
+              <input id="eqSerial" placeholder="ej. SN123456" />
+            </div>
+            <div class="form-row">
+              <label for="eqCost">Centro de costo</label>
+              <input id="eqCost" placeholder="ej. CC-001" />
+            </div>
+            <div class="form-row">
+              <label for="eqLocation">Ubicación</label>
+              <input id="eqLocation" placeholder="ej. Planta 1 - Taller" />
+            </div>
+            <div class="form-row">
+              <label for="lastCal">Última calibración</label>
+              <input id="lastCal" type="date" />
+            </div>
+            <div class="form-row">
+              <label for="interval">Periodicidad / Intervalo (días)</label>
+              <input id="interval" type="number" min="1" value="365" />
+            </div>
+            <div class="form-row">
+              <label for="eqCert">Certificado (URL o referencia)</label>
+              <input id="eqCert" placeholder="ej. http://... o Ref. Cert-2025-001" />
+            </div>
+            <div class="form-row">
+              <button id="saveEq" type="button" class="primary">Guardar equipo</button>
+              <button id="clearForm" type="button" class="ghost">Limpiar</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="right">
+          <div class="card">
+            <h3>Resumen</h3>
+            <p class="muted">Alertas y estadísticas rápidas</p>
+            <div class="space"></div>
+            <ul id="summary" style="list-style:none;padding:0;margin:0">
+              <li class="muted">Total equipos: <strong id="totalCount">0</strong></li>
+              <li class="muted">Vencidos: <strong id="overCount">0</strong></li>
+              <li class="muted">Por vencer (30 días): <strong id="soonCount">0</strong></li>
+            </ul>
+          </div>
+
+          <div class="space"></div>
+          <div class="card">
+            <h3>Exportar / Importar</h3>
+            <p class="muted">Exporte los equipos a CSV o importe un archivo.</p>
+            <div class="space"></div>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <button id="exportCsv" class="ghost" type="button">Exportar CSV</button>
+              <label class="ghost" for="importFile" style="cursor:pointer;padding:0.5rem;border-radius:8px">Importar CSV</label>
+              <input id="importFile" type="file" accept="text/csv" style="display:none" />
+            </div>
+          </div>
+
+          <div class="space"></div>
+          <div class="card">
+            <h3>Cómo funciona</h3>
+            <ol class="muted">
+              <li>Inicie sesión con la cuenta demo.</li>
+              <li>Agregue equipos con la fecha de última calibración y el intervalo en días.</li>
+              <li>La columna "Días restantes" indica cuánto falta hasta la próxima calibración.</li>
+              <li>Los datos se guardan en su navegador (localStorage).</li>
+            </ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>Aplicación demo — Datos guardados localmente en el navegador.</small>
+  </footer>
+
+  <script src="{{ url_for(\'static\', filename=\'js/app.js\') }}"></script>
+  <!-- Recover modal -->
+  <div id="recoverModal" class="modal" aria-hidden="true">
+    <div class="modal-card card">
+      <h3>Recuperar contraseña</h3>
+      <p class="muted">Ingrese su correo y le enviaremos un enlace para restablecer su contraseña.</p>
+      <form id="recoverForm">
+        <div class="form-row">
+          <label for="recoverEmail">Correo electrónico</label>
+          <input id="recoverEmail" type="email" placeholder="usuario@ejemplo.com" required />
+        </div>
+        <div class="form-row" style="display:flex;gap:0.5rem">
+          <button type="submit" class="primary">Enviar correo</button>
+          <button id="closeRecover" type="button" class="ghost">Cerrar</button>
+        </div>
+      </form>
+      <div id="recoverMsg" style="margin-top:0.5rem;color:var(--muted)"></div>
+    </div>
+  </div>
+</body>
+</html>

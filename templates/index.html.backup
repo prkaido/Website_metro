@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Servicio de Metrología — Calibraciones</title>
+		<link rel="stylesheet" href="static/css/style.css\') }}" />
+	</head>
+		<body>
+			<a href="#mainContent" class="skip-link">Saltar al contenido</a>
+			<header>
+						<div style="display:flex;align-items:center;gap:0.5rem">
+							<button id="hamburgerBtn" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false" class="hamburger" type="button">☰</button>
+					<img src="{{ url_for(\'static\', filename=\'logo.svg\') }}" alt="logo" class="logo" width="36" height="36" />
+					<h1>Servicio de Metrología — Gestor de Calibraciones</h1>
+				</div>
+				<div class="alerts" id="topAlerts" aria-live="polite"></div>
+			</header>
+
+				<!-- Sidebar -->
+				<aside id="sidebar" class="sidebar" aria-hidden="true" role="navigation" aria-label="Menú principal">
+					<div class="sidebar-inner card">
+						<div class="sidebar-top" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+						<img src="{{ url_for(\'static\', filename=\'logo.svg\') }}" alt="logo" class="logo small" width="28" height="28" />
+						<strong>Metrología</strong>
+					</div>
+							<nav>
+								<ul style="list-style:none;padding:0;margin:0">
+									<li><a class="side-link" href="dashboard.html" role="menuitem" tabindex="0">Dashboard</a></li>
+									<li><a class="side-link" href="dashboard.html#equipTable" role="menuitem" tabindex="0">Equipos</a></li>
+									<li><a class="side-link" href="add.html" role="menuitem" tabindex="0">Agregar equipo</a></li>
+									<li><button id="sideExport" class="side-link" role="menuitem" tabindex="0">Exportar CSV</button></li>
+								</ul>
+							</nav>
+				</div>
+			</aside>
+
+		<main class="container" id="mainContent">
+			<section class="card">
+				<h2>Bienvenido al Gestor de Calibraciones</h2>
+				<p class="muted">Para acceder al sistema, pulse <a href="login.html">Iniciar sesión</a>. Si ya ha iniciado sesión, puede ir a <a href="dashboard.html">Dashboard</a>.</p>
+				<div style="margin-top:1rem">
+					<a class="primary" href="login.html">Iniciar sesión</a>
+					<a class="ghost" href="dashboard.html" style="margin-left:0.5rem">Ir al Dashboard</a>
+				</div>
+			</section>
+		</main>
+
+		<footer>
+			<small>Aplicación demo — Datos guardados localmente en el navegador.</small>
+		</footer>
+
+		<script src="satic/js/app.js\') }}"></script>
+	</body>
+</html>
