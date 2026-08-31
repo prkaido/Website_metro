@@ -5,7 +5,7 @@ import express from 'express';
 import pg from 'pg';
 
 const { Pool } = pg;
-const required = ['DATABASE_URL', 'ADMIN_USERNAME', 'ADMIN_PASSWORD', 'AUTH_SECRET'];
+const required = ['DATABASE_URL', 'ADMIN_USERNAME', 'ADMIN_CONTRASENA', 'AUTH_SECRET'];
 const missing = required.filter((name) => !process.env[name]);
 if (missing.length) throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
 
@@ -67,7 +67,7 @@ app.get('/api/health', async (_req, res) => { await pool.query('SELECT 1'); res.
 app.post('/api/v1/auth/login', (req, res) => {
   const username = String(req.body?.username || '');
   const password = String(req.body?.password || '');
-  if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_PASSWORD) return res.status(401).json({ error: 'Invalid credentials' });
+  if (username !== process.env.ADMIN_USERNAME || password !== process.env.ADMIN_CONTRASENA) return res.status(401).json({ error: 'Invalid credentials' });
   res.json({ token: issueToken() });
 });
 app.get('/api/v1/equipments', requireAuth, async (_req, res) => {
