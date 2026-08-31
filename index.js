@@ -5,13 +5,13 @@ import express from 'express';
 import pg from 'pg';
 
 const { Pool } = pg;
-const required = ['DATABASE_URL', 'ADMIN_USERNAME', 'ADMIN_CONTRASENA', 'AUTH_SECRET'];
+const required = ['BASE_DE_DATOS_URL', 'ADMIN_USERNAME', 'ADMIN_CONTRASENA', 'AUTH_SECRET'];
 const missing = required.filter((name) => !process.env[name]);
 if (missing.length) throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false },
+  connectionString: process.env.BASE_DE_DATOS_URL,
+  ssl: process.env.BASE_DE_DATOS_URL.includes('localhost') ? false : { rejectUnauthorized: false },
 });
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
